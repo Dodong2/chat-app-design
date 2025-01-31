@@ -9,9 +9,9 @@ function App() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /* pang-connect sa database at socket.io */
-  const socket = io('http://localhost:3000/', {
+  const socketRef = useRef(io('https://chat-app-design.onrender.com', {
     transports: ["websocket", "polling"]
-  })
+  }));
 
   /* pang scroll view */
   /* para laging nasa baba at nakikita yung mga latest messages */
@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch('http://localhost:3000/chatapp/getMessages')
+        const res = await fetch('https://chat-app-design.onrender.com/chatapp/getMessages')
         const data = await res.json()
         setMessages(data.map((msg: { message: string }) => msg.message))
       } catch (err) {
@@ -33,6 +33,7 @@ function App() {
     fetchMessages()
 
     /* para sa socket.io */
+    const socket = socketRef.current;
     socket.on("receiveMessage", (data: string) => {
       setMessages((prevMessages) => [...prevMessages, data])
     })
@@ -47,7 +48,7 @@ function App() {
     e.preventDefault()
     if(message.trim() === '') return
 
-    socket.emit("sendMessage", message)
+    socketRef.current.emit("sendMessage", message)
     setMessage("")
   }
 
@@ -55,10 +56,10 @@ function App() {
     <>
      <div className="flex flex-col h-screen bg-gray-100">
       {/* Header */}
-      <div className="flex items-center justify-between bg-white p-4 shadow-md">
-        <h2 className="text-xl font-bold text-blue-600">ChattiDong</h2>
-        <FaBars className="text-blue-600 text-xl" />
-      </div>
+      <div className="sticky top-0 flex items-center justify-between bg-white p-4 shadow-md z-10">
+  <h2 className="text-xl font-bold text-blue-600">ChattiDong</h2>
+  <FaBars className="text-blue-600 text-xl" />
+</div>
       
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
