@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+.pnp.js
+npm-debug.log*
+yarn-error.log*
+.npmrc
+.yarn-integrity
+
+# Editor-specific
+.vscode/
+.idea/
+
+# Logs
+logs/
+
+# Build output
+dist/
+build/
+
+# Test results
+coverage/
+
+# Environment files
+.env
